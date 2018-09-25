@@ -10,13 +10,26 @@ ALLOWED_HOSTS = [env("DJANGO_ALLOWED_HOSTS")]
 
 # DATABASES
 # ------------------------------------------------------------------------------
-# DATABASES['default'] = env.db('DATABASE_URL')  # noqa F405
-# DATABASES['default']['ATOMIC_REQUESTS'] = True  # noqa F405
-# DATABASES['default']['CONN_MAX_AGE'] = env.int('CONN_MAX_AGE', default=60)  # noqa F405
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env("DJANGO_DB_NAME"),
+        'USER': env("DJANGO_DB_USER"),
+        'PASSWORD': env("DJANGO_DB_PASSWORD"),
+        'HOST': env("DJANGO_DB_HOST"),
+        'PORT': env("DJANGO_DB_PORT"),
+        'ATOMIC_REQUESTS': True,
+    }
+}
 
 # CACHES
 # ------------------------------------------------------------------------------
-CACHES = {}
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
 
 # SECURITY
 # ------------------------------------------------------------------------------
