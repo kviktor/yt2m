@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load template_extras %}
+
+{% block above_content %}
+  {% if object.in_progress or True %}
+    <section class="section-progress">
+      <div style="width: {{ progress }}%" class="progress-bar"></div>
+      <div style="padding: 10px;" id="progress-text">
+      {{ progress }}% - {{ object.get_state_display }}
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="section-danger hidden" id="download-error">
+    An error happened during the process, please try again later.
+  </section>
+{% endblock %}
+
+{% block content %}
+  <div id="helper-data" data-state="{{ object.state }}" data-url="{% url "ajax_download" download_id=object.uuid %}"></div>
+  <div class="row">
+    <div class="col-md-5">
+      <img src="{{ object.youtube_thumbnail }}" style="width: 100%"/>
+    </div>
+    <div class="col-md-7 text-left">
+      <h3>
+        <a href="https://youtu.be/{{ object.youtube_id }}">{{ object.youtube_title }}</a>
+      </h3>
+      <p>
+        Duration: {{ object.youtube_duration|readable_duration:True}}
+      </p>
+      {% with start=object.cut_start end=object.cut_end %}
+        {% if start or end %}
+          <p>
+            Cut:
+            {% if start %}{{ start|readable_duration }}{% else %}0{% endif %}
+            -
+            {% if end %}{{ end|readable_duration }}{% else %}{{ object.youtube_duration|readable_duration }}{% endif %}
+          </p>
+        {% endif %}
+      {% endwith %}
+
+      <p id="download-button-container" {% if object.state < 2 %}class="hidden"{% endif %}>
+        <a class="btn btn-success btn-lg" href="{% url "download_audio" download_id=object.uuid %}" download>
+          <i class="fas fa-download"></i>
+          &nbsp;Download
+        </a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

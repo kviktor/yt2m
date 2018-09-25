@@ -1,0 +1,4 @@
+-r ./base.txt
+
+uWSGI==2.0.17.1
+psycopg2==2.7.4 --no-binary psycopg2
