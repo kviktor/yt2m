@@ -12,7 +12,7 @@ def env(name, default=None):
     value = os.environ.get(name)
     if not value and default is not None:
         return default
-    else:
+    elif not value and default is None:
         raise ValueError("Missing env variable '%s'" % name)
 
     if value == "True":
@@ -238,7 +238,7 @@ CELERYD_TASK_TIME_LIMIT = CELERYD_TASK_SOFT_TIME_LIMIT * 2
 
 
 # CUSTOM SETTINGS
-MP3_DIRECTORY = env('MP3_DIRECTORY', default="/home/kviktor/Python/yt2m")
+MP3_DIRECTORY = env('MP3_DIRECTORY')
 PROGRESS_MAGIC = env("PROGRESS_MAGIC", default=15)
 MAX_VIDEO_DURATION = env("MAX_VIDEO_DURATION", default=20 * 60)
-FREE_SPACE_WARNING = 5
+FREE_SPACE_WARNING = int(env("FREE_SPACE_WARNING", default=5))
