@@ -1,3 +1,4 @@
+from urllib.parse import quote
 import os
 
 from django.conf import settings
@@ -65,7 +66,7 @@ def download_audio(request, download_id):
         return redirect(obj)
 
     return FileResponse(
-        open(os.path.join(settings.MP3_DIRECTORY, "%s.mp3" % obj.uuid), "rb"),
+        open(os.path.join(settings.MP3_DIRECTORY, f"{obj.uuid}.mp3"), "rb"),
         as_attachment=True,
-        filename=f'"{obj.youtube_title}.mp3"',
+        filename=f'{quote(obj.youtube_title)}.mp3',
     )

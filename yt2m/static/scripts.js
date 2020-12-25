@@ -36,10 +36,12 @@ function updatePage() {
 
       if(data.state == 2) {
         $("#download-button-container").fadeIn();
+        $(".progress-bar").removeClass("progress-bar-striped").removeClass("progress-bar-animated");
       }
 
       if(data.state == 3) {
         $("#download-error").slideDown();
+        $("#dl-progress-container").remove();
       }
 
       if(data.state < 2) {
