@@ -1,4 +1,5 @@
 from django.forms import Form, IntegerField, CharField, ValidationError
+from django.conf import settings
 
 from youtube_dl import YoutubeDL
 from youtube_dl.utils import YoutubeDLError
@@ -9,7 +10,10 @@ from yt2m.utils import DummyLogger
 class YouTubeDownloadForm(Form):
     cut_start = CharField(required=False)
     cut_end = CharField(required=False)
-    youtube_uri = CharField(required=True, error_messages={'required': 'Please enter a valid YouTube video URL or ID.'})
+    youtube_uri = CharField(
+        required=True,
+        error_messages={'required': 'Please enter a valid YouTube video URL or ID.'},
+    )
 
     def clean_youtube_uri(self):
         uri = self.cleaned_data['youtube_uri']
@@ -38,7 +42,7 @@ class YouTubeDownloadForm(Form):
         except ValueError:
             try:
                 split = cut_start.split(":")
-                cut_start = int(split[0]) * 60  + int(split[1])
+                cut_start = int(split[0]) * 60 + int(split[1])
             except (ValueError, IndexError):
                 raise ValidationError("%s is not a valid start value, "
                                       "either provide in seconds or mm:ss format" % cut_start)
@@ -57,8 +61,11 @@ class YouTubeDownloadForm(Form):
                 split = cut_end.split(":")
                 cut_end = int(split[0]) * 60 + int(split[1])
             except (ValueError, IndexError):
-                raise ValidationError("%s is not a valid end value, "
-                                      "either provide in seconds or mm:ss format" % cut_end)
+                raise ValidationError(
+                    "%(cut_end)s is not a valid end value, "
+                    "either provide in seconds or mm:ss format",
+                    params={'cut_end': cut_end},
+                )
 
         return cut_end
 
@@ -69,6 +76,7 @@ class YouTubeDownloadForm(Form):
             cut_start = data.get('cut_start')
             cut_end = data.get('cut_end')
             duration = data['youtube_uri']['duration']
+            title = data['youtube_uri']['title']
 
             if cut_start is not None:
                 if cut_start > duration:
@@ -80,3 +88,9 @@ class YouTubeDownloadForm(Form):
 
             if cut_start and cut_end and cut_start > cut_end:
                 raise ValidationError("Cut end must have a higher value than cut end")
+
+            if duration > settings.MAX_VIDEO_DURATION:
+                raise ValidationError(
+                    "%(title)s is too long, can't convert it to an audio file.",
+                    params={"title": title},
+                )

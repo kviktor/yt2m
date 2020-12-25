@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Youtube to MP3 converter">
+    <meta name="author" content="kviktor">
+    <title>YouTube to MP3{% block extra_title %}{% endblock %}</title>
+
+    <link href="/static/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+    <link rel="icon" href="/static/favicon.png">
+  </head>
+  <body class="d-flex flex-column h-100">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-xl">
+        <a class="navbar-brand" href="/">
+          <i class="fab fa-youtube" style="font-weight: normal;"></i>
+          YouTube to MP3
+        </a>
+      </div>
+    </nav>
+
+    {% if messages %}
+      {% for message in messages %}
+        <section class="section-danger">
+          <div class="container">
+            {{ message }}
+          </div>
+        </section>
+      {% endfor %}
+    {% endif %}
+
+    {% block above_content %}{% endblock %}
+
+    <div class="container" id="main-content">
+      <div class="bg-light p-5 rounded">
+        <section class="jumbotron text-center">
+          <div class="container">
+            {% block content %}{% endblock %}
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light">
+      <div class="container text-right" style="text-align: right;">
+        <span class="text-muted">
+          Code available on
+          <a href="https://github.com/kviktor/yt2m">
+            <i class="fab fa-github"></i> Github
+          </a>
+        </span>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="/static/scripts.js"></script>
+  </body>
+</html>

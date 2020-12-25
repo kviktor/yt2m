@@ -11,6 +11,15 @@ $(function() {
   $("#show-cut-link").click(function() {
     $("#cut-form").toggleClass("hidden");
   });
+
+  $("#start-btn").on("click", function(e) {
+    var width = $(this).width();
+    $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+    $(this).width(width);
+    $(this).prop("disabled", true);
+
+    $("form").submit();
+  });
 });
 
 
@@ -21,7 +30,9 @@ function updatePage() {
     success: function(data) {
       $("#progress-text").text(data.progress + "% - " + data.readable_state);
       var w = $(".section-progress").width();
-      $(".progress-bar").stop(true).animate({'width':  w * data.progress / 100}, 200);
+      var progress = data.progress < 20 ? 20 : data.progress;
+
+      $(".progress-bar").stop(true).animate({'width':  w * progress / 100}, 200);
 
       if(data.state == 2) {
         $("#download-button-container").fadeIn();

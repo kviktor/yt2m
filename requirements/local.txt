@@ -1,6 +1,0 @@
--r ./base.txt
-
-flake8==3.5.0
-pyflakes==2.0.0  # for f-string fix
-
-django-debug-toolbar==1.9.1  # https://github.com/jazzband/django-debug-toolbar

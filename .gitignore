@@ -287,3 +287,5 @@ yt2m/media/
 *.mp3
 *.db
 static_collected
+.env
+mp3_directory

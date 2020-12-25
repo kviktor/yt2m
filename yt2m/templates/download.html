@@ -1,23 +1,30 @@
 {% extends "base.html" %}
 {% load template_extras %}
 
-{% block above_content %}
-  {% if object.in_progress or True %}
-    <section class="section-progress">
-      <div style="width: {{ progress }}%" class="progress-bar"></div>
-      <div style="padding: 10px;" id="progress-text">
-      {{ progress }}% - {{ object.get_state_display }}
-      </div>
-    </section>
-  {% endif %}
+{% block extra_title %}
+  - {{ object.youtube_title }}
+{% endblock %}
 
+{% block above_content %}
   <section class="section-danger hidden" id="download-error">
-    An error happened during the process, please try again later.
+    <div class="container">
+      An error happened during the process, please try again later.
+    </div>
   </section>
 {% endblock %}
 
 {% block content %}
-  <div id="helper-data" data-state="{{ object.state }}" data-url="{% url "ajax_download" download_id=object.uuid %}"></div>
+
+  <div style="margin-bottom: 3rem;">
+    <div class="progress section-progress" style="height: 30px;">
+      <div class="progress-bar {% if object.in_progress %}progress-bar-striped progress-bar-animated{% endif %}" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%">
+        <span id="progress-text">
+          {{ progress }}% - {{ object.get_state_display }}
+        </span>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-md-5">
       <img src="{{ object.youtube_thumbnail }}" style="width: 100%"/>
@@ -48,4 +55,6 @@
       </p>
     </div>
   </div>
+
+  <div id="helper-data" data-state="{{ object.state }}" data-url="{% url "ajax_download" download_id=object.uuid %}"></div>
 {% endblock %}

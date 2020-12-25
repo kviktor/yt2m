@@ -1,0 +1,21 @@
+.hidden {
+  display: none;
+}
+
+#main-content {
+  margin-top: 50px;
+}
+
+.section-danger {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+}
+
+#cut-form {
+  margin-top: 25px;
+}
+
+a {
+  text-decoration: none;
+}
