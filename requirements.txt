@@ -6,7 +6,8 @@ argon2-cffi==18.1.0
 celery==5.0.5
 psycopg2-binary==2.8.6
 redis>=2.10.5
-uwsgi==2.0.19.1
+redis~=3.5.3
 sentry_sdk~=0.19.5
+uwsgi==2.0.19.1
 
 youtube_dl
