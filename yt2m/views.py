@@ -52,7 +52,11 @@ def ajax_download(request, download_id):
     obj = get_object_or_404(Download, uuid=download_id)
     progress = get_progress(obj)
 
-    return JsonResponse({'progress': progress, 'readable_state': obj.get_state_display(), 'state': obj.state})
+    return JsonResponse({
+        'progress': progress,
+        'readable_state': obj.get_state_display(),
+        'state': obj.state},
+    )
 
 
 def download_audio(request, download_id):
@@ -60,5 +64,8 @@ def download_audio(request, download_id):
     if obj.in_progress or obj.state != STATES.SUCCESS:
         return redirect(obj)
 
-    return FileResponse(open(os.path.join(settings.MP3_DIRECTORY, "%s.mp3" % obj.uuid), "rb"),
-                        as_attachment=True, filename=f"{obj.youtube_title}.mp3")
+    return FileResponse(
+        open(os.path.join(settings.MP3_DIRECTORY, "%s.mp3" % obj.uuid), "rb"),
+        as_attachment=True,
+        filename=f'"{obj.youtube_title}.mp3"',
+    )
