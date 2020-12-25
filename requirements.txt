@@ -3,6 +3,7 @@ celery==5.0.5
 psycopg2-binary==2.8.6
 redis>=2.10.5
 uwsgi==2.0.19.1
+sentry_sdk~=0.19.5
 
 django~=3.1.0
 django-environ~=0.4.5

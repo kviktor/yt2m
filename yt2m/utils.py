@@ -34,7 +34,7 @@ class DummyLogger(object):
         pass
 
     def error(self, msg):
-        logger.error(msg)
+        logger.error("DummyLogger error: %s", msg)
 
 
 class DummyStore():

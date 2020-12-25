@@ -10,8 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import logging
 import os
+
 import environ
+import sentry_sdk
+
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+
 
 env = environ.Env()
 environ.Env.read_env('.env')
@@ -90,6 +98,21 @@ STATIC_ROOT = env.str("STATIC_ROOT", default="static_collected")
 
 ADMIN_URL = env.str("ADMIN_URL", default="admin/")
 
+# Sentry settings
+SENTRY_DSN = env.str("SENTRY_DSN", default="")
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[
+            LoggingIntegration(level=logging.INFO, event_level=logging.INFO),
+            DjangoIntegration(),
+            CeleryIntegration(),
+        ],
+        environment="dev" if DEBUG else "prod",
+    )
+
+
+# Celery settings
 CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', default="redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ['json']

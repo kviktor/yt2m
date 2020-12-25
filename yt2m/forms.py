@@ -1,3 +1,5 @@
+import logging
+
 from django.forms import Form, IntegerField, CharField, ValidationError
 from django.conf import settings
 
@@ -5,6 +7,9 @@ from youtube_dl import YoutubeDL
 from youtube_dl.utils import YoutubeDLError
 
 from yt2m.utils import DummyLogger
+
+
+logger = logging.getLogger(__name__)
 
 
 class YouTubeDownloadForm(Form):
@@ -22,7 +27,7 @@ class YouTubeDownloadForm(Form):
             ydl = YoutubeDL({'noplaylist': True, 'logger': DummyLogger()})
             result = ydl.extract_info(uri, download=False)
         except YoutubeDLError as e:
-            print(e)
+            logger.exception("youtube dl error")
             raise ValidationError("Could not find the YouTube video on that URL.")
 
         return {
