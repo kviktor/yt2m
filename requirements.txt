@@ -10,4 +10,4 @@ redis~=3.5.3
 sentry_sdk~=0.19.5
 uwsgi==2.0.19.1
 
-youtube_dl
+yt-dlp

@@ -4,7 +4,7 @@ import subprocess
 
 from django.conf import settings
 
-from youtube_dl import YoutubeDL
+from yt_dlp import YoutubeDL
 
 from yt2m.celery import app
 from yt2m.models import Download, STATES

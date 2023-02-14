@@ -3,8 +3,8 @@ import logging
 from django.forms import Form, IntegerField, CharField, ValidationError
 from django.conf import settings
 
-from youtube_dl import YoutubeDL
-from youtube_dl.utils import YoutubeDLError
+from yt_dlp import YoutubeDL
+from yt_dlp.utils import YoutubeDLError
 
 from yt2m.utils import DummyLogger
 
