@@ -19,7 +19,9 @@ def get_progress(obj):
     elif obj.state == Download.States.CONVERTING:
         # TODO do this properly, this is just based on some assumptions
         elapsed = (timezone.now() - obj.created_at).total_seconds()
-        progress = min(95, int(70 + 30 * elapsed / obj.youtube_duration * settings.PROGRESS_MAGIC))
+        progress = min(
+            95, int(70 + 30 * elapsed / obj.youtube_duration * settings.PROGRESS_MAGIC)
+        )
     else:
         progress = 100
 
@@ -37,7 +39,7 @@ class DummyLogger(object):
         logger.error("DummyLogger error: %s", msg)
 
 
-class DummyStore():
+class DummyStore:
     def __init__(self):
         self.filename = None
 

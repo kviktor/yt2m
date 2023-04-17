@@ -5,27 +5,45 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Download',
+            name="Download",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('state', models.SmallIntegerField(choices=[(0, 'Downloading video...'), (1, 'Converting video...'), (2, 'Finished'), (3, 'ERROR'), (4, 'Cleaned')], default=0)),
-                ('youtube_id', models.CharField(max_length=128)),
-                ('youtube_title', models.CharField(max_length=128)),
-                ('youtube_thumbnail', models.CharField(max_length=255)),
-                ('youtube_duration', models.IntegerField()),
-                ('error', models.TextField(blank=True, null=True)),
-                ('task_id', models.CharField(max_length=128)),
-                ('cut_start', models.SmallIntegerField(default=0, null=True)),
-                ('cut_end', models.SmallIntegerField(default=None, null=True)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "state",
+                    models.SmallIntegerField(
+                        choices=[
+                            (0, "Downloading video..."),
+                            (1, "Converting video..."),
+                            (2, "Finished"),
+                            (3, "ERROR"),
+                            (4, "Cleaned"),
+                        ],
+                        default=0,
+                    ),
+                ),
+                ("youtube_id", models.CharField(max_length=128)),
+                ("youtube_title", models.CharField(max_length=128)),
+                ("youtube_thumbnail", models.CharField(max_length=255)),
+                ("youtube_duration", models.IntegerField()),
+                ("error", models.TextField(blank=True, null=True)),
+                ("task_id", models.CharField(max_length=128)),
+                ("cut_start", models.SmallIntegerField(default=0, null=True)),
+                ("cut_end", models.SmallIntegerField(default=None, null=True)),
             ],
         ),
     ]

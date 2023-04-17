@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path, re_path
-from django.views import defaults as default_views
 
 
 from yt2m.views import index, start_download, download, download_audio, ajax_download
@@ -23,6 +22,6 @@ if settings.DEBUG:
 
 
 if settings.DEBUG and "debug_toolbar" in settings.INSTALLED_APPS:
-        import debug_toolbar  # noqa
+    import debug_toolbar  # noqa
 
-        urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+    urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns

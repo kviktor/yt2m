@@ -1,6 +1,6 @@
 import logging
 
-from django.forms import Form, IntegerField, CharField, ValidationError
+from django.forms import Form, CharField, ValidationError
 from django.conf import settings
 
 from yt_dlp import YoutubeDL
@@ -17,28 +17,28 @@ class YouTubeDownloadForm(Form):
     cut_end = CharField(required=False)
     youtube_uri = CharField(
         required=True,
-        error_messages={'required': 'Please enter a valid YouTube video URL or ID.'},
+        error_messages={"required": "Please enter a valid YouTube video URL or ID."},
     )
 
     def clean_youtube_uri(self):
-        uri = self.cleaned_data['youtube_uri']
+        uri = self.cleaned_data["youtube_uri"]
 
         try:
-            ydl = YoutubeDL({'noplaylist': True, 'logger': DummyLogger()})
+            ydl = YoutubeDL({"noplaylist": True, "logger": DummyLogger()})
             result = ydl.extract_info(uri, download=False)
-        except YoutubeDLError as e:
+        except YoutubeDLError:
             logger.exception("youtube dl error")
             raise ValidationError("Could not find the YouTube video on that URL.")
 
         return {
-            'duration': result['duration'],
-            'youtube_id': result['id'],
-            'title': result['title'],
-            'thumbnail': result['thumbnail'],
+            "duration": result["duration"],
+            "youtube_id": result["id"],
+            "title": result["title"],
+            "thumbnail": result["thumbnail"],
         }
 
     def clean_cut_start(self):
-        cut_start = self.cleaned_data['cut_start']
+        cut_start = self.cleaned_data["cut_start"]
         if not cut_start:
             return None
 
@@ -49,13 +49,15 @@ class YouTubeDownloadForm(Form):
                 split = cut_start.split(":")
                 cut_start = int(split[0]) * 60 + int(split[1])
             except (ValueError, IndexError):
-                raise ValidationError("%s is not a valid start value, "
-                                      "either provide in seconds or mm:ss format" % cut_start)
+                raise ValidationError(
+                    "%s is not a valid start value, "
+                    "either provide in seconds or mm:ss format" % cut_start
+                )
 
         return cut_start
 
     def clean_cut_end(self):
-        cut_end = self.cleaned_data['cut_end']
+        cut_end = self.cleaned_data["cut_end"]
         if not cut_end:
             return None
 
@@ -69,7 +71,7 @@ class YouTubeDownloadForm(Form):
                 raise ValidationError(
                     "%(cut_end)s is not a valid end value, "
                     "either provide in seconds or mm:ss format",
-                    params={'cut_end': cut_end},
+                    params={"cut_end": cut_end},
                 )
 
         return cut_end
@@ -78,18 +80,22 @@ class YouTubeDownloadForm(Form):
         data = super().clean()
 
         if data.get("youtube_uri"):
-            cut_start = data.get('cut_start')
-            cut_end = data.get('cut_end')
-            duration = data['youtube_uri']['duration']
-            title = data['youtube_uri']['title']
+            cut_start = data.get("cut_start")
+            cut_end = data.get("cut_end")
+            duration = data["youtube_uri"]["duration"]
+            title = data["youtube_uri"]["title"]
 
             if cut_start is not None:
                 if cut_start > duration:
-                    raise ValidationError("Cut start must be lower than the video's duration")
+                    raise ValidationError(
+                        "Cut start must be lower than the video's duration"
+                    )
 
             if cut_end is not None:
                 if cut_end > duration:
-                    raise ValidationError("Cut end must be lower than the video's duration")
+                    raise ValidationError(
+                        "Cut end must be lower than the video's duration"
+                    )
 
             if cut_start and cut_end and cut_start > cut_end:
                 raise ValidationError("Cut end must have a higher value than cut end")

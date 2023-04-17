@@ -29,4 +29,4 @@ class Download(models.Model):
         return self.state in (self.States.DOWNLOADING, self.States.CONVERTING)
 
     def get_absolute_url(self):
-        return reverse("download", kwargs={'download_id': self.uuid})
+        return reverse("download", kwargs={"download_id": self.uuid})

@@ -25,17 +25,17 @@ def start_download(request):
 
         return redirect("index")
 
-    d = form.cleaned_data['youtube_uri']
+    d = form.cleaned_data["youtube_uri"]
     obj = Download.objects.create(
-        youtube_id=d['youtube_id'],
-        youtube_title=d['title'],
-        youtube_duration=d['duration'],
-        youtube_thumbnail=d['thumbnail'],
+        youtube_id=d["youtube_id"],
+        youtube_title=d["title"],
+        youtube_duration=d["duration"],
+        youtube_thumbnail=d["thumbnail"],
         cut_start=form.cleaned_data.get("cut_start"),
         cut_end=form.cleaned_data.get("cut_end"),
     )
 
-    result = download_and_convert_youtube_video.apply_async((obj.uuid, ))
+    result = download_and_convert_youtube_video.apply_async((obj.uuid,))
     obj.task_id = result.id
     obj.save()
 
@@ -46,17 +46,19 @@ def download(request, download_id):
     obj = get_object_or_404(Download, uuid=download_id)
     progress = get_progress(obj)
 
-    return render(request, "download.html", {'object': obj, 'progress': progress})
+    return render(request, "download.html", {"object": obj, "progress": progress})
 
 
 def ajax_download(request, download_id):
     obj = get_object_or_404(Download, uuid=download_id)
     progress = get_progress(obj)
 
-    return JsonResponse({
-        'progress': progress,
-        'readable_state': obj.get_state_display(),
-        'state': obj.state},
+    return JsonResponse(
+        {
+            "progress": progress,
+            "readable_state": obj.get_state_display(),
+            "state": obj.state,
+        },
     )
 
 
@@ -68,5 +70,5 @@ def download_audio(request, download_id):
     return FileResponse(
         open(os.path.join(settings.MP3_DIRECTORY, f"{obj.uuid}.mp3"), "rb"),
         as_attachment=True,
-        filename=f'{quote(obj.youtube_title)}.mp3',
+        filename=f"{quote(obj.youtube_title)}.mp3",
     )
