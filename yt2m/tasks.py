@@ -7,7 +7,7 @@ from django.conf import settings
 from yt_dlp import YoutubeDL
 
 from yt2m.celery import app
-from yt2m.models import Download, STATES
+from yt2m.models import Download
 from yt2m.utils import DummyLogger, DummyStore
 
 
@@ -40,7 +40,7 @@ def download_and_convert_youtube_video(self, uuid):
 
     YoutubeDL(ydl_opts).download([d.youtube_id])
 
-    d.state = STATES.CONVERTING
+    d.state = Download.States.CONVERTING
     d.save()
 
     convert_command = ['ffmpeg', '-i', ds.filename]
@@ -50,12 +50,12 @@ def download_and_convert_youtube_video(self, uuid):
 
     result = subprocess.run(convert_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode != 0:
-        d.state = STATES.ERROR
+        d.state = Download.states.ERROR
         d.error = "stdout: %s\nstderr: %s" % (result.stdout, result.stderr)
         logger.error(d.error)
         d.save()
     else:
-        d.state = STATES.SUCCESS
+        d.state = Download.States.SUCCESS
         d.save()
 
     os.remove(ds.filename)

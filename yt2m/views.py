@@ -7,7 +7,7 @@ from django.http import FileResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from yt2m.forms import YouTubeDownloadForm
-from yt2m.models import Download, STATES
+from yt2m.models import Download
 from yt2m.tasks import download_and_convert_youtube_video
 from yt2m.utils import get_progress
 
@@ -62,7 +62,7 @@ def ajax_download(request, download_id):
 
 def download_audio(request, download_id):
     obj = get_object_or_404(Download, uuid=download_id)
-    if obj.in_progress or obj.state != STATES.SUCCESS:
+    if obj.in_progress or obj.state != Download.States.SUCCESS:
         return redirect(obj)
 
     return FileResponse(
