@@ -24,6 +24,10 @@ class Download(models.Model):
     cut_start = models.SmallIntegerField(null=True, default=0)
     cut_end = models.SmallIntegerField(null=True, default=None)
 
+    class Meta:
+        ordering = ("-created_at",)
+        indexes = [models.Index(fields=["created_at"])]
+
     @property
     def in_progress(self):
         return self.state in (self.States.DOWNLOADING, self.States.CONVERTING)
